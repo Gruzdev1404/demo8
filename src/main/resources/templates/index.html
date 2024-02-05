@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Магазин вещей</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .products-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .product {
+            display: inline-block;
+            width: 155px;
+            margin: 10px;
+            text-align: center;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-image {
+            width: 150px;
+            height: 150px;
+            margin-bottom: 15px;
+            background-color: #ddd;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .product-price {
+            color: #777;
+        }
+
+        .cart {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cart h2 {
+            font-size: 18px;
+            color: #333;
+            margin: 0 0 10px;
+        }
+
+        .cart-items {
+            max-height: 200px;
+            overflow-y: scroll;
+        }
+
+        .cart-item {
+            margin-bottom: 5px;
+        }
+
+        .total-price {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<h1>Магазин вещей</h1>
+
+<div class="products-container">
+    <div th:each="product : ${products}" class="product">
+        <div class="product-image" th:style="'background-image: url(' + ${product.imagePath} + ')'"></div>
+        <div class="product-name" th:text="${product.name}"></div>
+        <div class="product-price" th:text="'$' + ${product.price}"></div>
+        <a th:href="@{/product/{name}(name=${product.name})}">Подробнее</a>
+        <button onclick="addToCart(this.parentNode.querySelector('.product-name').textContent, this.parentNode.querySelector('.product-price').textContent)">Добавить в корзину</button>
+    </div>
+</div>
+
+<div class="cart">
+    <h2>Корзина</h2>
+    <div class="cart-items"></div>
+    <div class="total-price"></div>
+</div>
+
+<script>
+    // Переменные для хранения состояния корзины
+    var cartItems = [];
+    var cartItemsContainer = document.querySelector('.cart-items');
+    var totalPriceContainer = document.querySelector('.total-price');
+
+    // Функция для добавления товара в корзину
+    function addToCart(name, price) {
+        cartItems.push({ name: name, price: parseFloat(price.replace('$', '')) });
+        updateCart();
+    }
+
+    // Функция для обновления содержимого корзины
+    function updateCart() {
+        var cartHTML = '';
+        var totalPrice = 0;
+
+        for (var i = 0; i < cartItems.length; i++) {
+            cartHTML += '<div class="cart-item">' + cartItems[i].name + ' - $' + cartItems[i].price.toFixed(2) + '</div>';
+            totalPrice += cartItems[i].price;
+        }
+
+        cartItemsContainer.innerHTML = cartHTML;
+        totalPriceContainer.innerHTML = 'Общая цена: $' + totalPrice.toFixed(2);
+    }
+</script>
+</body>
+</html>

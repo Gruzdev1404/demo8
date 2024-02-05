@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Детали товара</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .product-image {
+            width: 300px;
+            height: 300px;
+            margin-bottom: 20px;
+            background-color: #ddd;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .product-price {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+            text-align: center;
+        }
+
+        .comment-form {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        .comment-form button {
+            display: block;
+            margin: 0 auto;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .comments-section {
+            margin-top: 20px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; /* Задайте высоту для прокручиваемой области */
+            overflow-y: scroll; /* Включите вертикальную прокрутку */
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .comments-section h2 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .comments-section ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .comments-section li {
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+<h1 th:text="${product.name}"></h1>
+<div class="product-image" th:style="'background-image: url(' + ${product.imagePath} + ')'"></div>
+<div class="product-price" th:text="'Цена: $' + ${product.price}"></div>
+
+<div class="comment-form">
+    <form id="comment-form" method="POST" action="/submit-comment">
+        <textarea id="comment-input" name="comment" placeholder="Напишите комментарий о товаре"></textarea>
+        <button type="submit">Отправить</button>
+    </form>
+</div>
+
+<div class="comments-section">
+    <h2>Комментарии</h2>
+    <ul id="comments-list">
+        <!-- Здесь будут отображаться комментарии -->
+    </ul>
+</div>
+
+<script>
+    const commentForm = document.getElementById('comment-form');
+    const commentInput = document.getElementById('comment-input');
+    const commentsList = document.getElementById('comments-list');
+
+    commentForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const commentText = commentInput.value;
+
+        const newComment = document.createElement('li');
+        newComment.textContent = commentText;
+        newComment.classList.add('comment');
+
+        commentsList.appendChild(newComment);
+
+        commentInput.value = '';
+
+        // Прокрутка к последнему комментарию
+        commentsList.scrollTop = commentsList.scrollHeight;
+    });
+</script>
+
+</body>
+</html>
